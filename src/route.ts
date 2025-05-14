@@ -39,7 +39,7 @@ export async function routes(app: FastifyTypedInstance) {
         201: z.null().describe('User created')
       }
     }
-  }, (request, reply) => {
+  }, async (request, reply) => {
     const { name, email } = request.body
 
     users.push({
