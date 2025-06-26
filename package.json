@@ -1,9 +1,14 @@
 {
   "name": "fms-api",
-  "packageManager": "yarn@4.6.0",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-  "dev": "ts-node-dev --respawn --transpile-only src/presentation/server.ts"
-},
+    "dev": "ts-node-dev --respawn --transpile-only src/presentation/server.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "express": "^5.1.0",
     "mysql2": "^3.14.1"
