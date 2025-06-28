@@ -1,18 +1,21 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import db from '../infrastructure/database/mysql';
 import { userRoutes } from './routes/user.routes';
+import { responsibleRoutes } from './routes/responsible.routes';
+import { responsibleGroupRoutes } from './routes/responsibleGroup.routes';
+import { categoryRoutes } from './routes/category.routes';
+import { creditCardRoutes } from './routes/creditCard.routes';
+import { expenseRoutes } from './routes/expense.routes';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-// Rota principal de teste
 app.get('/', (req, res) => {
   res.send('<h1>API Finanças+ (TypeScript + Clean Architecture)</h1>');
 });
 
-// Rota para testar a conexão com o banco
 app.get('/test-db', async (req, res) => {
   try {
     const [results] = await db.query('SELECT NOW() as data_hora_atual;');
@@ -27,8 +30,20 @@ app.get('/test-db', async (req, res) => {
   }
 });
 
-// Agrupa todas as rotas de usuário sob o prefixo /users
 app.use('/users', userRoutes);
+app.use('/responsibles', responsibleRoutes); 
+app.use('/groups', responsibleGroupRoutes);
+app.use('/categories', categoryRoutes);
+app.use('/credit-cards', creditCardRoutes);
+app.use('/expenses', expenseRoutes);
+
+// NOVO: Middleware de tratamento de erros.
+// Deve ser o último middleware a ser adicionado.
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.error(err.stack); // Log do erro para debugging
+  // Retorna uma resposta de erro, usando a mensagem do erro lançado.
+  res.status(400).json({ message: err.message || 'Ocorreu um erro inesperado.' });
+});
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
