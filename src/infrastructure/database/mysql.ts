@@ -1,10 +1,10 @@
 import mysql from 'mysql2/promise';
 
 const pool = mysql.createPool({
-  host: '127.0.0.1',
+  host: 'mysql.railway.internal',
   user: 'root',
-  password: 'root', // **IMPORTANTE**: Troque pela sua senha
-  database: 'gefipe_db',
+  password: 'mDbNCFOlfnQQJOossjCKqtJgEbQyynNg',
+  database: 'railway',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
