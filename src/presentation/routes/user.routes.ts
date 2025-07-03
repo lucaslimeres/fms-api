@@ -15,20 +15,38 @@ userRoutes.post('/login', asyncHandler(async (req: Request, res: Response) => {
 }));
 
 // Rotas Protegidas
-userRoutes.use(async (req: Request, res: Response, next: NextFunction) => {
-    await ensureAuthenticated(req, res, next);
-});
+// userRoutes.use(async (req: Request, res: Response, next: NextFunction) => {
+//     await ensureAuthenticated(req, res, next);
+// });
 
-userRoutes.get('/', asyncHandler(async (req: Request, res: Response) => {
-    await userController.list(req, res);
-}));
+userRoutes.get(
+    '/', 
+    async (req: Request, res: Response, next: NextFunction) => {
+        await ensureAuthenticated(req, res, next);
+    }, 
+    asyncHandler(async (req: Request, res: Response) => {
+        await userController.list(req, res);
+    })
+);
 
-userRoutes.get('/profile', asyncHandler(async (req: Request, res: Response) => {
-    await userController.profile(req, res);
-}));
+userRoutes.get(
+    '/profile',
+    async (req: Request, res: Response, next: NextFunction) => {
+        await ensureAuthenticated(req, res, next);
+    },      
+    asyncHandler(async (req: Request, res: Response) => {
+        await userController.profile(req, res);
+    })
+);
 
-userRoutes.delete('/:id', asyncHandler(async (req: Request, res: Response) => {
-    await userController.delete(req, res);
-}));
+userRoutes.delete(
+    '/:id',
+    async (req: Request, res: Response, next: NextFunction) => {
+        await ensureAuthenticated(req, res, next);
+    },      
+    asyncHandler(async (req: Request, res: Response) => {
+        await userController.delete(req, res);
+    })
+);
 
 export { userRoutes };
