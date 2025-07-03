@@ -4,6 +4,8 @@ import { CreateCreditCardUseCase } from '../../application/use-cases/CreateCredi
 import { ListCreditCardsUseCase } from '../../application/use-cases/ListCreditCardsUseCase';
 import { UpdateCreditCardUseCase } from '../../application/use-cases/UpdateCreditCardUseCase';
 import { DeleteCreditCardUseCase } from '../../application/use-cases/DeleteCreditCardUseCase';
+import { GetCardFaturasUseCase } from '../../application/use-cases/GetCardFaturasUseCase';
+import { PayCardFaturaUseCase } from '../../application/use-cases/PayCardFaturaUseCase';
 
 export class CreditCardController {
   async create(req: Request, res: Response): Promise<Response> {
@@ -39,6 +41,37 @@ export class CreditCardController {
     const creditCardRepository = new CreditCardRepository();
     const useCase = new DeleteCreditCardUseCase(creditCardRepository);
     await useCase.execute(id, accountId);
+    return res.status(204).send();
+  }
+
+  async getFaturas(req: Request, res: Response): Promise<Response> {
+    const { monthYear } = req.query;
+    const { accountId } = req.user;
+
+    if (!monthYear) {
+      throw new Error('O filtro "monthYear" é obrigatório.');
+    }
+
+    const creditCardRepository = new CreditCardRepository();
+    const useCase = new GetCardFaturasUseCase(creditCardRepository);
+    const faturas = await useCase.execute(accountId, monthYear as string);
+
+    return res.json(faturas);
+  }
+  
+  async payFatura(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params; // cardId
+    const { monthYear } = req.body;
+    const { accountId } = req.user;
+
+    if (!monthYear) {
+      throw new Error('O campo "monthYear" é obrigatório.');
+    }
+
+    const creditCardRepository = new CreditCardRepository();
+    const useCase = new PayCardFaturaUseCase(creditCardRepository);
+    await useCase.execute(id, accountId, monthYear);
+
     return res.status(204).send();
   }
 }

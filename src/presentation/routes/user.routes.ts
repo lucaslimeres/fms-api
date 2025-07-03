@@ -6,29 +6,29 @@ import { ensureAuthenticated } from '../middlewares/ensureAuthenticated';
 const userRoutes = Router();
 const userController = new UserController();
 
-userRoutes.post(
-  '/',
-  asyncHandler(async (req: Request, res: Response) => {
+// Rotas Públicas
+userRoutes.post('/', asyncHandler(async (req: Request, res: Response) => {
     await userController.create(req, res);
-  })
-);
-
-userRoutes.post(
-  '/login',
-  asyncHandler(async (req: Request, res: Response) => {
+}));
+userRoutes.post('/login', asyncHandler(async (req: Request, res: Response) => {
     await userController.authenticate(req, res);
-  })
-);
+}));
 
-userRoutes.get(
-    '/profile', 
-    async (req: Request, res: Response, next: NextFunction) => {
-        await ensureAuthenticated(req, res, next);
-    }, 
-    asyncHandler(async (req: Request, res: Response) => {
-        await userController.profile(req, res);
-    })
-);
+// Rotas Protegidas
+userRoutes.use(async (req: Request, res: Response, next: NextFunction) => {
+    await ensureAuthenticated(req, res, next);
+});
 
+userRoutes.get('/', asyncHandler(async (req: Request, res: Response) => {
+    await userController.list(req, res);
+}));
+
+userRoutes.get('/profile', asyncHandler(async (req: Request, res: Response) => {
+    await userController.profile(req, res);
+}));
+
+userRoutes.delete('/:id', asyncHandler(async (req: Request, res: Response) => {
+    await userController.delete(req, res);
+}));
 
 export { userRoutes };

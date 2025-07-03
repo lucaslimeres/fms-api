@@ -57,4 +57,27 @@ export class ResponsibleGroupRepository implements IResponsibleGroupRepository {
     const sql = 'DELETE FROM group_members WHERE group_id = ? AND responsible_id = ?';
     await db.query(sql, [groupId, responsibleId]);
   }
+
+  async update(group: ResponsibleGroup): Promise<ResponsibleGroup> {
+    const sql = 'UPDATE responsible_groups SET name = ? WHERE group_id = ? AND account_id = ?';
+    await db.query(sql, [group.name, group.id, group.accountId]);
+    return group;
+  }  
+
+  async delete(id: string, accountId: string): Promise<void> {
+    const connection = await db.getConnection();
+    await connection.beginTransaction();
+    try {
+      // Primeiro, remove todos os membros do grupo
+      await connection.query('DELETE FROM group_members WHERE group_id = ?', [id]);
+      // Depois, remove o grupo
+      await connection.query('DELETE FROM responsible_groups WHERE group_id = ? AND account_id = ?', [id, accountId]);
+      await connection.commit();
+    } catch (error) {
+      await connection.rollback();
+      throw error;
+    } finally {
+      connection.release();
+    }
+  }  
 }

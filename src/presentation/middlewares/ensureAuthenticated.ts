@@ -27,7 +27,7 @@ export function ensureAuthenticated(
     // 3. Validar se o token é válido
     const { sub: userId, accountId, role } = verify(
       token,
-      'sua_chave_secreta_aqui' // A mesma chave secreta usada no login
+      'GEFIPEJWTSECRET' // A mesma chave secreta usada no login
     ) as IPayload;
 
     // 4. Injetar as informações do usuário (id, accountId, role) no objeto `request`

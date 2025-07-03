@@ -4,5 +4,9 @@ export interface UpdateExpenseDTO {
   description?: string;
   amount?: number;
   referenceDate?: string;
+  referenceMonthYear?: string;
   categoryId?: string;
+  responsibleId?: string;
+  billType?: 'fixed' | 'variable';
+  cardId?: string;
 }

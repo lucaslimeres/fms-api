@@ -7,4 +7,6 @@ export interface ICreditCardRepository {
   findById(id: string, accountId: string): Promise<CreditCard | null>;
   findByName(name: string, accountId: string): Promise<CreditCard | null>;
   findAllByAccountId(accountId: string): Promise<CreditCard[]>;
+  findFaturasByMonth(accountId: string, monthYear: string): Promise<any[]>;
+  payFatura(cardId: string, accountId: string, monthYear: string): Promise<void>;
 }

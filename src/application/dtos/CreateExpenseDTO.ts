@@ -3,6 +3,7 @@ export interface CreateExpenseDTO {
   description: string;
   amount: number;
   referenceDate: string; // YYYY-MM-DD
+  referenceMonthYear: string;
   categoryId: string;
   type: 'bill' | 'credit_card';
   responsibleId?: string; // Obrigatório se não for grupo

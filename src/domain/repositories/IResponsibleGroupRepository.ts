@@ -7,4 +7,6 @@ export interface IResponsibleGroupRepository {
   findAllByAccountId(accountId: string): Promise<ResponsibleGroup[]>;
   addMember(member: GroupMember): Promise<void>;
   removeMember(groupId: string, responsibleId: string): Promise<void>;
+  update(group: ResponsibleGroup): Promise<ResponsibleGroup>;
+  delete(id: string, accountId: string): Promise<void>;
 }

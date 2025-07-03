@@ -17,7 +17,7 @@ export class CreateExpenseUseCase {
     if (data.type === 'bill') {
       const expense = new Expense(
         randomUUID(), data.accountId, data.categoryId, data.description, data.amount,
-        new Date(data.referenceDate), data.referenceDate.substring(0, 7),
+        new Date(data.referenceDate), data.referenceMonthYear,
         'bill', 'pending', data.responsibleId, data.groupId, data.billType
       );
       await this.expenseRepository.create(expense);
@@ -32,14 +32,14 @@ export class CreateExpenseUseCase {
       const purchaseDate = new Date(data.referenceDate);
 
       for (let i = 1; i <= totalInstallments; i++) {
-        // Simples cálculo de data da fatura, pode ser mais complexo
-        const referenceMonth = new Date(purchaseDate.getFullYear(), purchaseDate.getMonth() + i, 1);
-        const referenceMonthYear = `${referenceMonth.getFullYear()}-${(referenceMonth.getMonth() + 1).toString().padStart(2, '0')}`;
+        const initialFaturaDate = new Date(`${data.referenceMonthYear}-02`); // Usar dia 2 para evitar bugs de fuso
+        const faturaDate = new Date(initialFaturaDate.getFullYear(), initialFaturaDate.getMonth() + (i - 1), 2);
+        const faturaMonthYear = `${faturaDate.getFullYear()}-${(faturaDate.getMonth() + 1).toString().padStart(2, '0')}`;
         
         const expense = new Expense(
             randomUUID(), data.accountId, data.categoryId, `${data.description} ${totalInstallments > 1 ? `(${i}/${totalInstallments})` : ''}`, 
-            installmentAmount, purchaseDate, referenceMonthYear, 'credit_card', 'pending',
-            data.responsibleId, data.groupId, undefined, data.cardId,
+            installmentAmount, purchaseDate, faturaMonthYear, // USA O VALOR CALCULADO
+            'credit_card', 'pending', data.responsibleId, data.groupId, undefined, data.cardId,
             totalInstallments > 1, installmentGroupId, i, totalInstallments
         );
         expenses.push(expense);

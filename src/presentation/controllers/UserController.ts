@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import { CreateUserUseCase } from '../../application/use-cases/CreateUserUseCase';
 import { AuthenticateUserUseCase } from '../../application/use-cases/AuthenticateUserUseCase';
 import { UserRepository } from '../../infrastructure/repositories/UserRepository';
+import { ListUsersUseCase } from '../../application/use-cases/ListUsersUseCase';
+import { DeleteUserUseCase } from '../../application/use-cases/DeleteUserUseCase';
 
 export class UserController {
   async create(req: Request, res: Response): Promise<Response | void> {
@@ -37,4 +39,21 @@ export class UserController {
         }
     });
   }
+
+  async list(req: Request, res: Response): Promise<Response> {
+    const { accountId } = req.user;
+    const userRepository = new UserRepository();
+    const listUsersUseCase = new ListUsersUseCase(userRepository);
+    const users = await listUsersUseCase.execute(accountId);
+    return res.json(users);
+  }
+
+  async delete(req: Request, res: Response): Promise<Response> {
+    const { id: userIdToDelete } = req.params;
+    const { id: requestingUserId, accountId } = req.user;
+    const userRepository = new UserRepository();
+    const deleteUserUseCase = new DeleteUserUseCase(userRepository);
+    await deleteUserUseCase.execute(userIdToDelete, requestingUserId, accountId);
+    return res.status(204).send();
+  }  
 }

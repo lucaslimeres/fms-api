@@ -26,4 +26,12 @@ creditCardRoutes.delete('/:id', asyncHandler(async (req: Request, res: Response)
     await creditCardController.delete(req, res);
 }));
 
+creditCardRoutes.get('/faturas', asyncHandler(async (req: Request, res: Response) => {
+    await creditCardController.getFaturas(req, res);
+}));
+
+creditCardRoutes.patch('/:id/pay-fatura', asyncHandler(async (req: Request, res: Response) => {
+    await creditCardController.payFatura(req, res);
+}));
+
 export { creditCardRoutes };

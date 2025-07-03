@@ -2,7 +2,7 @@ export class Expense {
   constructor(
     public readonly id: string,
     public readonly accountId: string,
-    public readonly categoryId: string,
+    public categoryId: string,
     public description: string,
     public amount: number,
     public referenceDate: Date,

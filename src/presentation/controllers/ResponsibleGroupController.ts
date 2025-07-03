@@ -5,6 +5,8 @@ import { CreateResponsibleGroupUseCase } from '../../application/use-cases/Creat
 import { ListResponsibleGroupsUseCase } from '../../application/use-cases/ListResponsibleGroupsUseCase';
 import { AddMemberToGroupUseCase } from '../../application/use-cases/AddMemberToGroupUseCase';
 import { RemoveMemberFromGroupUseCase } from '../../application/use-cases/RemoveMemberFromGroupUseCase';
+import { UpdateResponsibleGroupUseCase } from '../../application/use-cases/UpdateResponsibleGroupUseCase';
+import { DeleteResponsibleGroupUseCase } from '../../application/use-cases/DeleteResponsibleGroupUseCase';
 
 
 export class ResponsibleGroupController {
@@ -46,6 +48,25 @@ export class ResponsibleGroupController {
         const useCase = new RemoveMemberFromGroupUseCase(groupRepository);
         
         await useCase.execute(groupId, memberId, accountId);
+        return res.status(204).send();
+    }
+
+    async update(req: Request, res: Response): Promise<Response> {
+        const { id } = req.params;
+        const { name } = req.body;
+        const { accountId } = req.user;
+        const groupRepository = new ResponsibleGroupRepository();
+        const useCase = new UpdateResponsibleGroupUseCase(groupRepository);
+        const group = await useCase.execute(id, name, accountId);
+        return res.json(group);
+    }
+    
+    async delete(req: Request, res: Response): Promise<Response> {
+        const { id } = req.params;
+        const { accountId } = req.user;
+        const groupRepository = new ResponsibleGroupRepository();
+        const useCase = new DeleteResponsibleGroupUseCase(groupRepository);
+        await useCase.execute(id, accountId);
         return res.status(204).send();
     }
 }

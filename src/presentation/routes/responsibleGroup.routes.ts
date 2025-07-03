@@ -26,4 +26,12 @@ responsibleGroupRoutes.delete('/:groupId/members/:memberId', asyncHandler(async 
     await groupController.removeMember(req, res);
 }));
 
+responsibleGroupRoutes.put('/:id', asyncHandler(async (req: Request, res: Response) => {
+    await groupController.update(req, res);
+}));
+
+responsibleGroupRoutes.delete('/:id', asyncHandler(async (req: Request, res: Response) => {
+    await groupController.delete(req, res);
+}));
+
 export { responsibleGroupRoutes };

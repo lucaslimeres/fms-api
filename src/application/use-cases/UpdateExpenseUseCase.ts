@@ -14,7 +14,12 @@ export class UpdateExpenseUseCase {
     // Atualiza apenas os campos fornecidos
     expense.description = data.description ?? expense.description;
     expense.amount = data.amount ?? expense.amount;
+    expense.billType = data.billType ?? expense.billType;
+    expense.cardId = data.cardId ?? expense.cardId;
+    expense.categoryId = data.categoryId ?? expense.categoryId;
+    expense.responsibleId = data.responsibleId ?? expense.responsibleId;
     expense.referenceDate = data.referenceDate ? new Date(data.referenceDate) : expense.referenceDate;
+    expense.referenceMonthYear = data.referenceMonthYear ?? expense.referenceMonthYear;
     
     // Outros campos como categoryId podem ser adicionados aqui
 
