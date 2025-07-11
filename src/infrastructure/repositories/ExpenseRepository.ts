@@ -302,10 +302,21 @@ export class ExpenseRepository implements IExpenseRepository {
             return acc;
         }, {});
 
+
+        const cardExpenses = cardExpensesGrouped.map((item: any) => {
+          // Lógica para determinar o status da fatura
+          let status = 'Fatura Aberta';
+          if (item.expense.length === 0) {
+              status = 'Sem Gastos'; // NOVO STATUS
+          } else if (item.expense.every((exp: any) => exp.status === 'paid')) {
+              status = 'Fatura Paga';
+          }
+        })
+
         return {
           responsible,
           bills: [...(directBills as any[]), ...groupBills],
-          cardExpenses: Object.values(cardExpensesGrouped),
+          cardExpenses: Object.values(cardExpenses),
           groupExpenses: [] // Não é mais necessário, pois foi dividido
         };
       })
